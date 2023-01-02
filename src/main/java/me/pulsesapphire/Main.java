@@ -1,26 +1,33 @@
 package me.pulsesapphire;
-import io.javalin.Javalin;
 import me.pulsesapphire.clipackage.Terminal;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        var app = Javalin.create()
-                .get("/", ctx -> {
-                    ctx.result("Hello World!!");
-                })
-                .start(9000);
-
         Scanner scanner = new Scanner(System.in);
+        String command = scanner.nextLine();
 
-        Terminal terminal = new Terminal("cmd /c start.bat", true);
+        Terminal terminal;
+        try {
+            terminal = new Terminal(command, true);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("test");
 
         while (true) {
             String input = scanner.nextLine();
 
-            terminal.sendInput(input);
+            try {
+                if (terminal.isActive()) {
+                    terminal.sendInput(input);
+                } else {
+                    terminal = new Terminal(input, true);
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }

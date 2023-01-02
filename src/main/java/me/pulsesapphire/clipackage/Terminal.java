@@ -68,4 +68,8 @@ public class Terminal {
             System.out.println(e.getMessage());
         }
     }
+
+    public boolean isActive() {
+        return isActive;
+    }
 }
