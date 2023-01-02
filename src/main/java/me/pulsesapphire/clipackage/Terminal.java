@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Terminal {
-    private Thread thread;
+    private Thread threadStdOut;
+    private Thread threadStdErr;
     private Process process;
     private boolean printToConsole;
     private String command;
@@ -28,6 +29,7 @@ public class Terminal {
             } else if (operatingSystem.equals("Windows 10")) {
                 this.process = Runtime.getRuntime().exec("cmd.exe");
             } else {
+                this.isActive = false;
                 throw new Exception("Operating system not supported.");
             }
 
@@ -35,7 +37,7 @@ public class Terminal {
 
             this.inputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
-            thread = new Thread(() -> {
+            threadStdOut = new Thread(() -> {
                 try {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
 
@@ -65,7 +67,39 @@ public class Terminal {
                 }
             });
 
-            thread.start();
+            threadStdOut.start();
+
+            threadStdErr = new Thread(() -> {
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(this.process.getErrorStream()));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        this.output.add(line);
+                        if (this.printToConsole) System.out.println(line);
+                    }
+
+                    while (this.process.isAlive()) {
+                        while ((line = reader.readLine()) != null) {
+                            this.output.add(line);
+                            if (this.printToConsole) System.out.println(line);
+                        }
+
+                        Thread.sleep(100);
+                    }
+
+                    this.isActive = false;
+
+                    if (printToConsole) System.out.println("Process exited with code: " + this.exitCode);
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    this.isActive = false;
+                }
+            });
+
+            threadStdErr.start();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             this.isActive = false;
@@ -74,7 +108,8 @@ public class Terminal {
 
     public void sendInput(String input) {
         try {
-            this.inputStream.write(input + "\n");
+            this.inputStream.write(input);
+            this.inputStream.newLine();
             this.inputStream.flush();
         } catch (Exception e) {
             System.out.println(e.getMessage());
