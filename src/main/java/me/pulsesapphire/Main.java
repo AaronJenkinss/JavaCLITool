@@ -8,12 +8,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
 
-        Terminal terminal;
-        try {
-            terminal = new Terminal(command, true);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        Terminal terminal = new Terminal(command, true);
 
         while (true) {
             String input = scanner.nextLine();

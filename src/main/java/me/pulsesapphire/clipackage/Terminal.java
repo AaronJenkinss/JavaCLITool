@@ -24,6 +24,7 @@ public class Terminal {
             this.process = Runtime.getRuntime().exec(command);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            this.isActive = false;
         }
 
         this.inputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
@@ -54,6 +55,7 @@ public class Terminal {
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                this.isActive = false;
             }
         });
 
