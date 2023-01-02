@@ -12,7 +12,6 @@ public class Main {
 
         while (true) {
             String input = scanner.nextLine();
-
             try {
                 if (terminal.isActive()) {
                     terminal.sendInput(input);
