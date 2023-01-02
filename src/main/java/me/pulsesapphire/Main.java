@@ -14,7 +14,6 @@ public class Main {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("test");
 
         while (true) {
             String input = scanner.nextLine();
