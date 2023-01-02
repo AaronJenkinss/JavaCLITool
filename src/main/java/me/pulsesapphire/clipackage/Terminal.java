@@ -21,7 +21,6 @@ public class Terminal {
         this.output = new ArrayList<String>();
 
         String operatingSystem = System.getProperty("os.name");
-        System.out.println(operatingSystem);
 
         try {
             if (operatingSystem.equals("Linux")) {
@@ -31,6 +30,8 @@ public class Terminal {
             } else {
                 throw new Exception("Operating system not supported.");
             }
+
+            System.out.println("Initialized Java CLI Tool for: " + operatingSystem + ". Created by PulseSapphire. Contact @PulseSapphire#6734 on discord to get to talk to them.");
 
             this.inputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
