@@ -15,11 +15,12 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
+        Terminal terminal = new Terminal("cmd /c start.bat", true);
+
         while (true) {
             String input = scanner.nextLine();
-            System.out.println("user input: " + input);
 
-            Terminal terminal = new Terminal(input, true);
+            terminal.sendInput(input);
         }
     }
 }
