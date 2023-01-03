@@ -5,13 +5,16 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Terminal terminal = new Terminal(true);
+        Terminal terminal = new Terminal(true, 100);
 
         Scanner scanner = new Scanner(System.in);
 
         while (terminal.isActive()) {
             String input = scanner.nextLine();
             terminal.sendInput(input);
+
+            System.out.println(terminal.getOutputStdOut().size());
+            System.out.println(terminal.getOutputStdErr().size());
         }
     }
 }

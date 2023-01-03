@@ -1,25 +1,27 @@
 package me.pulsesapphire.clipackage;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.LinkedList;
 
 public class Terminal {
     private Thread threadStdOut;
     private Thread threadStdErr;
     private Process process;
     private boolean printToConsole;
-    private String command;
     private boolean isActive;
-    private ArrayList<String> output;
+    private LinkedList<String> outputStdOut;
+    private LinkedList<String> outputStdErr;
+    private int outputLines;
     private int exitCode;
 
     private BufferedWriter inputStream;
 
-    public Terminal(boolean printToConsole) {
+    public Terminal(boolean printToConsole, int outputLinesSizePerStream) {
         this.isActive = true;
         this.printToConsole = printToConsole;
-        this.output = new ArrayList<String>();
+        this.outputStdOut = new LinkedList<String>();
+        this.outputStdErr = new LinkedList<String>();
+        this.outputLines = outputLinesSizePerStream;
 
         String operatingSystem = System.getProperty("os.name");
 
@@ -33,7 +35,7 @@ public class Terminal {
                 throw new Exception("Operating system not supported.");
             }
 
-            System.out.println("Initialized Java CLI Tool for: " + operatingSystem + ". Created by PulseSapphire. Contact @PulseSapphire#6734 on discord to get to talk to them.");
+            System.out.println("Initialized Java CLI Tool for: " + operatingSystem + ". Created by PulseSapphire. Contact @PulseSapphire#6734 on discord to talk to them.");
 
             this.inputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
@@ -43,14 +45,22 @@ public class Terminal {
 
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        this.output.add(line);
+                        this.outputStdOut.add(line);
                         if (this.printToConsole) System.out.println(line);
+
+                        if (this.outputStdOut.size() > this.outputLines) {
+                            this.outputStdOut.removeFirst();
+                        }
                     }
 
                     while (this.process.isAlive()) {
                         while ((line = reader.readLine()) != null) {
-                            this.output.add(line);
+                            this.outputStdOut.add(line);
                             if (this.printToConsole) System.out.println(line);
+
+                            if (this.outputStdOut.size() > this.outputLines) {
+                                this.outputStdOut.removeFirst();
+                            }
                         }
 
                         Thread.sleep(100);
@@ -75,14 +85,22 @@ public class Terminal {
 
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        this.output.add(line);
+                        this.outputStdErr.add(line);
                         if (this.printToConsole) System.out.println(line);
+
+                        if (this.outputStdErr.size() > this.outputLines) {
+                            this.outputStdErr.removeFirst();
+                        }
                     }
 
                     while (this.process.isAlive()) {
                         while ((line = reader.readLine()) != null) {
-                            this.output.add(line);
+                            this.outputStdErr.add(line);
                             if (this.printToConsole) System.out.println(line);
+
+                            if (this.outputStdErr.size() > this.outputLines) {
+                                this.outputStdErr.removeFirst();
+                            }
                         }
 
                         Thread.sleep(100);
@@ -132,7 +150,11 @@ public class Terminal {
         return this.exitCode;
     }
 
-    public ArrayList<String> getOutput() {
-        return this.output;
+    public LinkedList<String> getOutputStdOut() {
+        return this.outputStdOut;
+    }
+
+    public LinkedList<String> getOutputStdErr() {
+        return this.outputStdErr;
     }
 }
