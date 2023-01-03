@@ -35,7 +35,7 @@ public class Terminal {
                 throw new Exception("Operating system not supported.");
             }
 
-            System.out.println("Initialized Java CLI Tool for: " + operatingSystem + ". Created by PulseSapphire. Contact @PulseSapphire#6734 on discord to talk to them.");
+            System.out.println("Initialized Java CLI Tool for: " + operatingSystem + ".");
 
             this.inputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
