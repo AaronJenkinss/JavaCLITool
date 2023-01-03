@@ -12,9 +12,6 @@ public class Main {
         while (terminal.isActive()) {
             String input = scanner.nextLine();
             terminal.sendInput(input);
-
-            System.out.println(terminal.getOutputStdOut().size());
-            System.out.println(terminal.getOutputStdErr().size());
         }
     }
 }
